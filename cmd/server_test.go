@@ -117,4 +117,11 @@ func TestSetFirstValue(t *testing.T) {
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, fmt.Sprintf(formatStringvalue, string2name, "buzz"), w.Body.String())
+
+	// Testing fizz buzz
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest(http.MethodGet, "/result", nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "1,2,fizz,4,buzz,fizz,7,8,fizz,buzz,11,fizz,13,14,fizzbuzz", w.Body.String())
 }

@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -40,7 +42,33 @@ func setupRouter() *gin.Engine {
 	router.PUT("/string/first", createRoutePutString(&s1))
 	router.GET("/string/second", createRouteGetString(string2name, &s2))
 	router.PUT("/string/second", createRoutePutString(&s2))
+	router.GET("/result", fizzbuzz(&int1, &int2, &limit, &s1, &s2))
 	return router
+}
+
+func format(sb *strings.Builder, i1, i2, i int, s1, s2, concat string) {
+	if i%i1 == 0 && i%i2 == 0 {
+		sb.WriteString(fmt.Sprintf("%s", concat))
+	} else if i%i1 == 0 {
+		sb.WriteString(fmt.Sprintf("%s", s1))
+	} else if i%i2 == 0 {
+		sb.WriteString(fmt.Sprintf("%s", s2))
+	} else {
+		sb.WriteString(fmt.Sprintf("%d", i))
+	}
+}
+
+func fizzbuzz(i1, i2, limit *int, s1, s2 *string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var sb strings.Builder
+		concat := fmt.Sprintf("%s%s", *s1, *s2)
+		for i := 1; i < *limit; i++ {
+			format(&sb, *i1, *i2, i, *s1, *s2, concat)
+			sb.WriteRune(',')
+		}
+		format(&sb, *i1, *i2, *limit, *s1, *s2, concat)
+		c.String(http.StatusOK, sb.String())
+	}
 }
 
 type stringValue struct {
@@ -77,7 +105,7 @@ func createRoutePutInt(value *int) gin.HandlerFunc {
 			return
 		}
 		*value = body.Value
-		c.JSON(http.StatusOK, &body)
+		c.Status(http.StatusOK)
 	}
 }
 
