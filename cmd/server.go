@@ -5,12 +5,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
 func main() {
+	addr := "localhost:80"
+	if len(os.Args) >= 2 {
+		addr = os.Args[1]
+	}
+
 	router := setupRouter()
-	if err := router.Run("localhost:9080"); err != nil {
+	if err := router.Run(addr); err != nil {
 		log.Fatalln(err)
 	}
 }
@@ -35,7 +41,7 @@ func fizzbuzzRoute(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.String(200, fizzbuzz(params.Int1, params.Int2, params.Limit, params.Str1, params.Str2))
+	c.String(http.StatusOK, fizzbuzz(params.Int1, params.Int2, params.Limit, params.Str1, params.Str2))
 }
 
 func format(sb *strings.Builder, i1, i2, i int, s1, s2, concat string) {
