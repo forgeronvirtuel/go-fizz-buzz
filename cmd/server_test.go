@@ -27,6 +27,13 @@ func TestSetFirstValue(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, fmt.Sprintf(formatIntvalue, int2name, 0), w.Body.String())
 
+	// Read the limit, default value
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest(http.MethodGet, "/limit", nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, fmt.Sprintf(formatIntvalue, limitname, 0), w.Body.String())
+
 	// Read the first string, default value
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest(http.MethodGet, "/string/first", nil)
@@ -52,6 +59,13 @@ func TestSetFirstValue(t *testing.T) {
 	bodyInt = intValue{Value: 5}
 	v, _ = json.Marshal(bodyInt)
 	req, _ = http.NewRequest(http.MethodPut, "/int/second", bytes.NewReader(v))
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	// Set the limit to 15
+	bodyInt = intValue{Value: 15}
+	v, _ = json.Marshal(bodyInt)
+	req, _ = http.NewRequest(http.MethodPut, "/limit", bytes.NewReader(v))
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 
@@ -82,6 +96,13 @@ func TestSetFirstValue(t *testing.T) {
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, fmt.Sprintf(formatIntvalue, int2name, 5), w.Body.String())
+
+	// Read the limit
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest(http.MethodGet, "/limit", nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, fmt.Sprintf(formatIntvalue, limitname, 15), w.Body.String())
 
 	// Read the first string
 	w = httptest.NewRecorder()

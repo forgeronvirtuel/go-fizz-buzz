@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	limitname         = "limit"
 	int1name          = "int1"
 	int2name          = "int1"
 	string1name       = "str1"
@@ -26,8 +27,11 @@ func setupRouter() *gin.Engine {
 	router := gin.Default()
 	int1 := 0
 	int2 := 0
+	limit := 0
 	s1 := ""
 	s2 := ""
+	router.GET("/limit", createRouteGetInt(limitname, &limit))
+	router.PUT("/limit", createRoutePutInt(&limit))
 	router.GET("/int/first", createRouteGetInt(int1name, &int1))
 	router.PUT("/int/first", createRoutePutInt(&int1))
 	router.GET("/int/second", createRouteGetInt(int2name, &int2))
