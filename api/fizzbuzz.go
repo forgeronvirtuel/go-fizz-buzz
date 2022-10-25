@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -15,13 +16,17 @@ type fizzBuzzParam struct {
 	Str2  string `form:"str2" binding:"required"`
 }
 
-func FizzbuzzRoute(c *gin.Context) {
-	var params fizzBuzzParam
-	if err := c.Bind(&params); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+func CreateFizzbuzzRoute(counter *RequestCounter) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.Println(c.Request.RequestURI)
+		counter.Count(c.Request.RequestURI)
+		var params fizzBuzzParam
+		if err := c.Bind(&params); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.String(http.StatusOK, fizzbuzz(params.Int1, params.Int2, params.Limit, params.Str1, params.Str2))
 	}
-	c.String(http.StatusOK, fizzbuzz(params.Int1, params.Int2, params.Limit, params.Str1, params.Str2))
 }
 
 func fizzbuzz(i1, i2, limit int, s1, s2 string) string {

@@ -21,6 +21,8 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	router := gin.Default()
-	router.GET("/", api.FizzbuzzRoute)
+	counter := api.NewRequestCounter()
+	router.GET("/", api.CreateFizzbuzzRoute(counter))
+	router.GET("/statistics", api.CreateStatisticsRoute(counter))
 	return router
 }
