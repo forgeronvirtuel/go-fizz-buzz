@@ -38,9 +38,19 @@ All parameters are required otherwise the API returns an error.
 Examples:
 
 ```sh
-curl http://localhost:9080/?int1=3&int2=5&limit=15&str1=fizz&str2=buzz
+curl "http://localhost:9080/?int1=3&int2=5&limit=15&str1=fizz&str2=buzz"
 # Return "1,2,fizz,4,buzz,fizz,7,8,fizz,buzz,11,fizz,13,14,fizzbuzz"
 
-curl http://localhost:9080/?int1=3&int2=5&limit=15&str1=fizz
+curl "http://localhost:9080/?int1=3&int2=5&limit=15&str1=fizz"
 # Returns "{"error":"Key: 'fizzBuzzParam.Str2' Error:Field validation for 'Str2' failed on the 'required' tag"}"
 ```
+
+The statistics route aims to find out what is the most hit request
+
+Example:
+
+```sh
+curl "http://localhost:9080/statistics"
+# Returns "{"hit":1,"request":"/?int1=3&int2=5&limit=15&str1=fizz&str2=buzz"}"
+```
+
