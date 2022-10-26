@@ -2,6 +2,15 @@
 
 REST API to compute a fizz buzz program.
 
+## Ready for production
+
+This repository is dockerized:
+
+```sh
+docker pull forgeronvirtuel/fizz-buzz-server
+docker run [-p 9080:80] fizz-buzz-server
+```
+
 ## Build
 
 ```sh
